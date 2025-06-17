@@ -28,7 +28,7 @@ for url in urls:
         response.raise_for_status()  # 检查请求是否成功
         
         # 根据URL判断内容类型
-        if url == 'https://raw.githubusercontent.com/ymyuuu/IPDB/refs/heads/main/BestCF/bestcfv4.txt':
+        if url == 'https://raw.githubusercontent.com/ymyuuu/IPDB/main/BestCF/bestcfv4.txt':
             # 直接处理文本内容
             ip_matches = re.findall(ip_pattern, response.text)
             ip_set.update(ip_matches)
