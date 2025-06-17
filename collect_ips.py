@@ -60,7 +60,6 @@ for url in urls:
 # 将唯一的IP地址写入文件
 with open('ip.txt', 'w') as file:
     for ip in ip_set:
-        file.write(ip + '
-')
+        file.write(ip + '\n')
 
 print('IP地址已保存到ip.txt文件中。')
