@@ -7,7 +7,7 @@ import os
 urls = [
     'https://api.uouin.com/cloudflare.html', 
     'https://ip.164746.xyz', 
-    'https://raw.githubusercontent.com/ymyuuu/IPDB/refs/heads/main/BestCF/bestcfv4.txt'
+    'https://raw.githubusercontent.com/ymyuuu/IPDB/main/BestCF/bestcfv4.txt'
 ]
 
 # 正则表达式用于匹配IP地址
