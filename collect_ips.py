@@ -14,7 +14,7 @@ urls = [
 
 # 正则表达式
 ipv4_pattern = r'\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b'
-ipv6_pattern = r'\b(?:[A-Fa-f0-9]{1,4}:){2,7}[A-Fa-f0-9]{1,4}\b'
+ipv6_candidate_pattern = r'([a-fA-F0-9:]{2,39})'  # 宽松 IPv6 提取
 
 # 请求头
 headers = {
@@ -25,30 +25,37 @@ headers = {
 if os.path.exists('ip.txt'):
     os.remove('ip.txt')
 
-# 使用集合去重
-ip_set = set()
+ip_set = set()  # 存储 IPv4 + IPv6
 
-# 遍历每个URL
+# 遍历每个 URL
 for url in urls:
     try:
         response = requests.get(url, headers=headers, timeout=10)
         response.raise_for_status()
-
         content = response.text
 
+        # 提取文本
         if url.endswith('.txt'):
-            all_matches = re.findall(ipv4_pattern, content) + re.findall(ipv6_pattern, content)
+            text = content
         else:
             soup = BeautifulSoup(content, 'html.parser')
             elements = soup.find_all('tr') or soup.find_all('li')
-            text_content = '\n'.join(el.get_text() for el in elements)
-            all_matches = re.findall(ipv4_pattern, text_content) + re.findall(ipv6_pattern, text_content)
+            text = '\n'.join(el.get_text() for el in elements)
 
-        # 验证合法性
-        for ip in all_matches:
+        # 匹配 IPv4
+        for ip in re.findall(ipv4_pattern, text):
             try:
-                ipaddress.ip_address(ip)
-                ip_set.add(ip)
+                if ipaddress.ip_address(ip).version == 4:
+                    ip_set.add(ip)
+            except ValueError:
+                continue
+
+        # 匹配 IPv6（宽松匹配 + 验证合法性）
+        for ip in re.findall(ipv6_candidate_pattern, text):
+            try:
+                ip_obj = ipaddress.ip_address(ip)
+                if ip_obj.version == 6:
+                    ip_set.add(str(ip_obj))  # 转成规范形式
             except ValueError:
                 continue
 
@@ -57,9 +64,9 @@ for url in urls:
     except Exception as e:
         print(f"[解析错误] {url} -> {e}")
 
-# 写入文件（合并）
-with open('ip.txt', 'w') as file:
+# 写入合并文件 ip.txt
+with open('ip.txt', 'w') as f:
     for ip in sorted(ip_set, key=lambda x: (ipaddress.ip_address(x).version, x)):
-        file.write(ip + '\n')
+        f.write(ip + '\n')
 
-print(f"✅ 共采集到 {len(ip_set)} 个唯一 IP（含 IPv4 与 IPv6），已写入 ip.txt。")
+print(f"✅ 采集完成，共 {len(ip_set)} 个唯一 IP（IPv4 + IPv6），已写入 ip.txt。")
