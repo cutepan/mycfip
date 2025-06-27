@@ -35,7 +35,7 @@ ipv6_dict = {}
 utctimestamp = datetime.now().strftime('%Y%m%d%H%M')
 beijing_time = datetime.utcnow() + timedelta(hours=8)
 now_str = beijing_time.strftime('%Y-%m-%d-%H-%M')
-timestamp = beijing_time.strftime('%Y%m%d_%H:%M')
+timestamp = beijing_time.strftime('%Y%m%d_%H%M')
 
 # 遍历来源
 for url, shortname in sources.items():
