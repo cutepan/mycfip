@@ -34,5 +34,5 @@ jobs:
 
           # 如果有更改才提交
           git add ip.txt ipv6.txt
-          git diff --cached --quiet || git commit -m "🤖 自动更新IP数据 $(date '+%Y-%m-%d %H:%M')"
+          git diff --cached --quiet || git commit -m "🤖 自动更新IP数据 $(TZ='Asia/Shanghai' date '+%Y-%m-%d %H:%M')"
           git push
