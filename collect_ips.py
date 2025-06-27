@@ -84,7 +84,7 @@ with open('ip.txt', 'w') as f4:
 
 # 写入 ipv6.txt（仅IPv6）
 with open('ipv6.txt', 'w') as f6:
-    f6.write(f"[::1]:1234#采集时间{now_str}\n")
+    f6.write(f"[::1]:1236#采集时间{now_str}\n")
     for ip in sorted(ipv6_dict):
         f6.write(f"{ip}#{ipv6_dict[ip]}\n")
 
