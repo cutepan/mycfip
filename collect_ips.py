@@ -3,8 +3,7 @@ from bs4 import BeautifulSoup
 import re
 import os
 import ipaddress
-from datetime import datetime
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 
 # ✅ URL源与简称
 sources = {
@@ -24,14 +23,18 @@ headers = {
 }
 
 # 删除旧文件
-if os.path.exists('ip.txt'):
-    os.remove('ip.txt')
+for file in ['ip.txt', 'ipv6.txt']:
+    if os.path.exists(file):
+        os.remove(file)
 
-# IP => 备注
-ip_dict = {}
+# IP 分类存储
+ipv4_dict = {}
+ipv6_dict = {}
 
-# 当前时间（不带冒号和秒）
+# 当前时间
 timestamp = datetime.now().strftime('%Y%m%d%H%M')
+beijing_time = datetime.utcnow() + timedelta(hours=8)
+now_str = beijing_time.strftime('%Y-%m-%d-%H-%M')
 
 # 遍历来源
 for url, shortname in sources.items():
@@ -53,7 +56,7 @@ for url, shortname in sources.items():
                 if ipaddress.ip_address(ip).version == 4:
                     ip_with_port = f"{ip}:{PORT}"
                     comment = f"{shortname}-{timestamp}"
-                    ip_dict[ip_with_port] = comment
+                    ipv4_dict[ip_with_port] = comment
             except ValueError:
                 continue
 
@@ -64,7 +67,7 @@ for url, shortname in sources.items():
                 if ip_obj.version == 6:
                     ip_with_port = f"[{ip_obj.compressed}]:{PORT}"
                     comment = f"IPv6{shortname}-{timestamp}"
-                    ip_dict[ip_with_port] = comment
+                    ipv6_dict[ip_with_port] = comment
             except ValueError:
                 continue
 
@@ -73,13 +76,17 @@ for url, shortname in sources.items():
     except Exception as e:
         print(f"[解析错误] {url} -> {e}")
 
-# 写入 ip.txt
-with open('ip.txt', 'w') as f:
-    # 写入当前时间，格式可以根据需要调整
-    beijing_time = datetime.utcnow() + timedelta(hours=8)
-    now_str = beijing_time.strftime('%Y-%m-%d-%H-%M')
-    f.write(f"127.0.0.1:1234#采集时间{now_str}\n")
-    for ip in sorted(ip_dict, key=lambda x: (4 if '.' in x else 6, x)):
-        f.write(f"{ip}#{ip_dict[ip]}\n")
+# 写入 ip.txt（仅IPv4）
+with open('ip.txt', 'w') as f4:
+    f4.write(f"127.0.0.1:1234#采集时间{now_str}\n")
+    for ip in sorted(ipv4_dict):
+        f4.write(f"{ip}#{ipv4_dict[ip]}\n")
 
-print(f"✅ 共采集 {len(ip_dict)} 个 IP，IPv6 添加前缀标识，格式已统一输出到 ip.txt")
+# 写入 ipv6.txt（仅IPv6）
+with open('ipv6.txt', 'w') as f6:
+    f6.write(f"[::1]:1234#采集时间{now_str}\n")
+    for ip in sorted(ipv6_dict):
+        f6.write(f"{ip}#{ipv6_dict[ip]}\n")
+
+print(f"✅ IPv4 写入 ip.txt，共 {len(ipv4_dict)} 个")
+print(f"✅ IPv6 写入 ipv6.txt，共 {len(ipv6_dict)} 个")
