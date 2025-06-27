@@ -4,6 +4,7 @@ import re
 import os
 import ipaddress
 from datetime import datetime
+from datetime import datetime, timedelta, timezone
 
 # ✅ URL源与简称
 sources = {
@@ -74,6 +75,10 @@ for url, shortname in sources.items():
 
 # 写入 ip.txt
 with open('ip.txt', 'w') as f:
+    # 写入当前时间，格式可以根据需要调整
+    beijing_time = datetime.utcnow() + timedelta(hours=8)
+    now_str = beijing_time.strftime('%Y-%m-%d-%H-%M')
+    f.write(f"127.0.0.1:1234#采集时间{now_str}\n")
     for ip in sorted(ip_dict, key=lambda x: (4 if '.' in x else 6, x)):
         f.write(f"{ip}#{ip_dict[ip]}\n")
 
