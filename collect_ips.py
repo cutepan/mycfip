@@ -55,7 +55,7 @@ for url, shortname in sources.items():
             try:
                 if ipaddress.ip_address(ip).version == 4:
                     ip_with_port = f"{ip}:{PORT}"
-                    comment = f"{shortname}-{timestamp}"
+                    comment = f"{shortname}-{now_str}"
                     ipv4_dict[ip_with_port] = comment
             except ValueError:
                 continue
@@ -66,7 +66,7 @@ for url, shortname in sources.items():
                 ip_obj = ipaddress.ip_address(ip)
                 if ip_obj.version == 6:
                     ip_with_port = f"[{ip_obj.compressed}]:{PORT}"
-                    comment = f"IPv6{shortname}-{timestamp}"
+                    comment = f"IPv6{shortname}-{now_str}"
                     ipv6_dict[ip_with_port] = comment
             except ValueError:
                 continue
