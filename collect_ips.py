@@ -79,13 +79,13 @@ for url, shortname in sources.items():
 
 # 写入 ip.txt（仅IPv4）
 with open('ip.txt', 'w') as f4:
-    f4.write(f"127.0.0.1:1234#采集时间{now_str}\n")
+    f4.write(f"172.17.0.1:1234#采集时间{now_str}\n")
     for ip in sorted(ipv4_dict):
         f4.write(f"{ip}#{ipv4_dict[ip]}\n")
 
 # 写入 ipv6.txt（仅IPv6）
 with open('ipv6.txt', 'w') as f6:
-    f6.write(f"[::1]:1236#采集时间{now_str}\n")
+    f6.write(f"172.17.0.1:1236#采集时间{now_str}\n")
     for ip in sorted(ipv6_dict):
         f6.write(f"{ip}#{ipv6_dict[ip]}\n")
 
