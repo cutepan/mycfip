@@ -2,8 +2,9 @@ name: Auto IP Collector
 
 on:
   schedule:
-    - cron: '0 4 * * *'  # 每天 UTC 04:00（北京时间中午12点）运行
-  workflow_dispatch:  # 允许手动触发
+    - cron: '0 */6 * * *' # 每6小时运行一次
+  workflow_dispatch: # 允许手动触发Add commentMore actions
+  push: # 允许提交触发
 
 jobs:
   collect:
