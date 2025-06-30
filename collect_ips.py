@@ -9,7 +9,8 @@ from datetime import datetime, timedelta
 sources = {
     'https://api.uouin.com/cloudflare.html': 'Uouin',
     'https://ip.164746.xyz': 'ZhiXuanWang',
-    'https://raw.githubusercontent.com/ymyuuu/IPDB/main/BestCF/bestcfv4.txt': 'IPDB'
+    'https://raw.githubusercontent.com/ymyuuu/IPDB/main/BestCF/bestcfv4.txt': 'IPDB',
+    'https://www.wetest.vip/page/cloudflare/address_v6.html': 'wetestV6'
 }
 
 PORT = '443'  # 目标端口号
